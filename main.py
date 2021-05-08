@@ -37,32 +37,30 @@ cities_df = germany_cities_df.append(switzerland_cities_df)
 cities_gdf = geopandas.GeoDataFrame(
     cities_df, crs="EPSG:4326", geometry=geopandas.points_from_xy(cities_df.lng, cities_df.lat))
 
-selected_cities_list = ["Wuppertal", "Paderborn", "Bielefeld", "Berlin", "Munich", "Zürich"]
+selected_cities_list = ["Wuppertal", "Paderborn", "Berlin", "Munich", "Zürich", "Bern"]
 selected_cities_gdf = cities_gdf[cities_gdf.city.isin(selected_cities_list)]
 centroid_df = selected_cities_gdf.mean()
 centroid_gdf = geopandas.GeoDataFrame(geometry=geopandas.points_from_xy(x=[centroid_df.lng], y=[centroid_df.lat], crs="EPSG:4326"))
-print(centroid_gdf)
+central_city_gdf = ckdnearest(centroid_gdf, cities_gdf)
 
-closest_city_gdf = ckdnearest(centroid_gdf, cities_gdf)
-print(closest_city_gdf)
-
-#germany_gdf.to_crs("EPSG:3857")
+# Reproject data into Google Maps/OpenStreetMap projection and plot it
+germany_gdf.to_crs("EPSG:3857")
 germany_gdf.boundary.plot(ax=ax, color="black")
-#switzerland_gdf.to_crs("EPSG:3857")
+switzerland_gdf.to_crs("EPSG:3857")
 switzerland_gdf.boundary.plot(ax=ax, color="black")
-#germany_bundesland_gdf.to_crs("EPSG:3857")
+germany_bundesland_gdf.to_crs("EPSG:3857")
 germany_bundesland_gdf.boundary.plot(ax=ax, color="grey")
-#
+switzerland_kanton_gdf.to_crs("EPSG:3857")
 switzerland_kanton_gdf.boundary.plot(ax=ax, color="grey")
-#cities_gdf.to_crs("EPSG:3857")
-cities_gdf.plot(ax=ax, column="population", label="Städte", cmap="Greens", norm=matplotlib.colors.LogNorm())
-#selected_cities_gdf.to_crs("EPSG:3857")
-selected_cities_gdf.plot(ax=ax, color="blue", label="Wohnorte")
-#centroid_gdf.to_crs("EPSG:3857")
+cities_gdf.to_crs("EPSG:3857")
+cities_gdf.plot(ax=ax, column="population", label="Cities", cmap="Greens", norm=matplotlib.colors.LogNorm())
+selected_cities_gdf.to_crs("EPSG:3857")
+selected_cities_gdf.plot(ax=ax, color="blue", label="Hometowns")
+centroid_gdf.to_crs("EPSG:3857")
 centroid_gdf.plot(ax=ax, color="yellow", label="Centroid")
-
-#closest_city_gdf.to_crs("EPSG:3857")
-closest_city_gdf.plot(ax=ax, color="red", label="Fulda")
+central_city_gdf.to_crs("EPSG:3857")
+central_city_label = central_city_gdf.iloc[0].city
+central_city_gdf.plot(ax=ax, color="red", label=central_city_label)
 
 ax.set_facecolor('0.9')
 
