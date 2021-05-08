@@ -13,4 +13,4 @@ Run main.py inside the Pipenv.
 ## Example
 Centroid of the cities used in the example code.
 
-![map example picture](https://github.com/ApolloLV/geocenter/blob/master/map.png?raw=true)
+![map example picture](https://github.com/ApolloLV/geocenter/blob/main/map.png?raw=true)
